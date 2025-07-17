@@ -36,7 +36,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--num-workers", type=int, default=8,
                         help="Number of threads or processes to use in pool.")
-    parser.add_argument("--use-processes", type=bool, action="store_true",
+    parser.add_argument("--use-processes", action="store_true",
                         help="Use a process pool instead of a thread pool.")
     parser.add_argument("--block-size", type=int, default=1024 * 1024,
                         help="Number of bytes to process at a time")

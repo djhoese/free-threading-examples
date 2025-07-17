@@ -19,7 +19,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--num-workers", type=int, default=8,
                         help="Number of threads or processes to use in pool.")
-    parser.add_argument("--use-processes", type=bool, action="store_true",
+    parser.add_argument("--use-processes", action="store_true",
                         help="Use a process pool instead of a thread pool.")
     args = parser.parse_args()
     urls = [
