@@ -1,7 +1,6 @@
 """A CPU-bound multi-threaded script.
 
 Download and unzip: http://www.gwicks.net/textlists/english3.zip
-Remove the last 4 lines (unknown encoding)
 
 """
 import math
