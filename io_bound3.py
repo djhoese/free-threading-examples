@@ -15,7 +15,13 @@ def process_binary(url: str) -> int:
 
 
 if __name__ == "__main__":
-    max_workers = 8
+    from argparse import ArgumentParser
+    parser = ArgumentParser()
+    parser.add_argument("--num-workers", type=int, default=8,
+                        help="Number of threads or processes to use in pool.")
+    parser.add_argument("--use-processes", type=bool, action="store_true",
+                        help="Use a process pool instead of a thread pool.")
+    args = parser.parse_args()
     urls = [
         "https://www.ssec.wisc.edu/~davidh/polar2grid/scmi_grids/scmi_grid_GOES_EAST.png",
         "https://www.ssec.wisc.edu/~davidh/polar2grid/scmi_grids/scmi_grid_GOES_STORE.png",
@@ -27,9 +33,11 @@ if __name__ == "__main__":
         "https://www.ssec.wisc.edu/~davidh/polar2grid/scmi_grids/scmi_grid_Polar.png",
     ]
 
-    # executor_cls = ProcessPoolExecutor
     executor_cls = ThreadPoolExecutor
-    with executor_cls(max_workers=max_workers) as executor:
+    if args.use_processes:
+        executor_cls = ProcessPoolExecutor
+
+    with executor_cls(max_workers=args.num_workers) as executor:
         result_iter = executor.map(process_binary, urls * 3)
         print(list(result_iter))
 
