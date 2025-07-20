@@ -5,7 +5,7 @@ Create fake data with::
     dd if=/dev/urandom of=my_data.dat bs=128M count=80 iflag=fullblock
 
 """
-
+import math
 import os
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from functools import partial
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     file_size = os.stat(args.in_file).st_size
-    num_bytes = min(file_size // args.num_workers, 1024 * 1024 * 500)  # Maximum of ~500MB chunk sizes
+    num_bytes = min(math.ceil(file_size / args.num_workers), 1024 * 1024 * 500)  # Maximum of ~500MB chunk sizes
     offsets = list(range(0, file_size, num_bytes))
     print(f"File size: {file_size} @ {num_bytes} bytes")
     print("Offsets: ", offsets)
