@@ -33,15 +33,30 @@ def process_binary(block_size: int, filename: str) -> int:
 
 if __name__ == "__main__":
     from argparse import ArgumentParser
+
     parser = ArgumentParser()
-    parser.add_argument("--num-workers", type=int, default=8,
-                        help="Number of threads or processes to use in pool.")
-    parser.add_argument("--use-processes", action="store_true",
-                        help="Use a process pool instead of a thread pool.")
-    parser.add_argument("--block-size", type=int, default=1024 * 1024,
-                        help="Number of bytes to process at a time")
-    parser.add_argument("glob_pat", nargs="+",
-                        help="Glob pattern to use for files to process. Can also be a list of files.")
+    parser.add_argument(
+        "--num-workers",
+        type=int,
+        default=8,
+        help="Number of threads or processes to use in pool.",
+    )
+    parser.add_argument(
+        "--use-processes",
+        action="store_true",
+        help="Use a process pool instead of a thread pool.",
+    )
+    parser.add_argument(
+        "--block-size",
+        type=int,
+        default=1024 * 1024,
+        help="Number of bytes to process at a time",
+    )
+    parser.add_argument(
+        "glob_pat",
+        nargs="+",
+        help="Glob pattern to use for files to process. Can also be a list of files.",
+    )
     args = parser.parse_args()
 
     files = []
@@ -56,4 +71,3 @@ if __name__ == "__main__":
     with executor_cls(max_workers=args.num_workers) as executor:
         result_iter = executor.map(process_func, files)
         print(list(result_iter))
-

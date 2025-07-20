@@ -17,11 +17,19 @@ def process_sleep(input_sleep: int) -> int:
 
 if __name__ == "__main__":
     from argparse import ArgumentParser
+
     parser = ArgumentParser()
-    parser.add_argument("--num-workers", type=int, default=8,
-                        help="Number of threads or processes to use in pool.")
-    parser.add_argument("--use-processes", action="store_true",
-                        help="Use a process pool instead of a thread pool.")
+    parser.add_argument(
+        "--num-workers",
+        type=int,
+        default=8,
+        help="Number of threads or processes to use in pool.",
+    )
+    parser.add_argument(
+        "--use-processes",
+        action="store_true",
+        help="Use a process pool instead of a thread pool.",
+    )
     args = parser.parse_args()
 
     executor_cls = ThreadPoolExecutor
@@ -31,4 +39,3 @@ if __name__ == "__main__":
     with executor_cls(max_workers=args.num_workers) as executor:
         result_iter = executor.map(process_sleep, [1, 2] * 4)
         print(list(result_iter))
-

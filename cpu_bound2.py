@@ -3,6 +3,7 @@
 Download and unzip: http://www.gwicks.net/textlists/english3.zip
 
 """
+
 import math
 import os
 from functools import partial
@@ -10,7 +11,9 @@ from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from typing import Iterator
 
 
-def process_words(dictionary_file: str, num_bytes: int, letters: list[str], offset: int) -> list:
+def process_words(
+    dictionary_file: str, num_bytes: int, letters: list[str], offset: int
+) -> list:
     with open(dictionary_file, mode="rt", encoding="IBM852") as dict_file:
         dict_file.seek(offset)
         words_str = dict_file.read(num_bytes + 15)
@@ -39,13 +42,22 @@ def _filter_words_list(words_list: list[str], letters: list[str]) -> Iterator[st
 
 if __name__ == "__main__":
     from argparse import ArgumentParser
+
     parser = ArgumentParser()
-    parser.add_argument("--num-workers", type=int, default=8,
-                        help="Number of threads or processes to use in pool.")
-    parser.add_argument("--use-processes", action="store_true",
-                        help="Use a process pool instead of a thread pool.")
-    parser.add_argument("letters",
-                        help="Letters to solve for. Primary letter must be first.")
+    parser.add_argument(
+        "--num-workers",
+        type=int,
+        default=8,
+        help="Number of threads or processes to use in pool.",
+    )
+    parser.add_argument(
+        "--use-processes",
+        action="store_true",
+        help="Use a process pool instead of a thread pool.",
+    )
+    parser.add_argument(
+        "letters", help="Letters to solve for. Primary letter must be first."
+    )
     args = parser.parse_args()
 
     executor_cls = ThreadPoolExecutor
@@ -61,5 +73,3 @@ if __name__ == "__main__":
         result_iter = executor.map(process_func, offsets)
         results = list(result_iter)
         print([word for words in results for word in words])
-
-
