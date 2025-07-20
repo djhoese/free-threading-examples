@@ -8,9 +8,11 @@ import time
 def process_sleep(input_sleep: int) -> int:
     mask = random.randint(1, 4)
     sleep_times = sorted([1, 2, 2, 4, 4, input_sleep], key=lambda x: x & mask)
+    count = 0
     for sleep_time in sleep_times:
         time.sleep(sleep_time)
-    return mask
+        count += sleep_time
+    return count
 
 
 if __name__ == "__main__":
