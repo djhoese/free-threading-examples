@@ -37,7 +37,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--num-workers",
         type=int,
-        default=8,
+        default=10,
         help="Number of threads or processes to use in pool.",
     )
     parser.add_argument(
