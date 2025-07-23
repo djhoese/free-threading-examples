@@ -11,6 +11,8 @@ import os
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from functools import partial
 
+import numpy as np
+
 
 def process_binary(filename: str, operation: str, num_bytes: int, offset: int) -> int:
     with open(filename, mode="rb") as bin_file:
@@ -23,6 +25,8 @@ def process_binary(filename: str, operation: str, num_bytes: int, offset: int) -
             return data[len(data) // 2]
         if operation == "max":
             return max(data)
+        if operation == "npmax":
+            return np.frombuffer(data, dtype=np.uint8).max()
         raise ValueError(f"Unexpected operation: {operation}")
 
 
@@ -46,7 +50,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--operation",
         default="index_middle",
-        choices=["index_middle", "max"],
+        choices=["index_middle", "max", "npmax"],
         help="Operation or calculation to perform on the loaded chunk of file data.",
     )
     parser.add_argument(
