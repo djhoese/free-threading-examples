@@ -5,13 +5,11 @@ from urllib.request import urlopen
 
 
 def process_binary(url: str) -> int:
-    # response = urlopen("http://example.com/")
-    # response = urlopen("https://bin.ssec.wisc.edu/pub/incoming/SSMIS_AMSR2_comparison.tar.gz")
-    # response = urlopen("https://bin.ssec.wisc.edu/pub/incoming/THORPEX_2008_Dropsonde_txt.zip")
     response = urlopen(url)
     data = response.read()
-    print(len(data))
-    return max(data)
+    data_len = len(data)
+    print(data_len)
+    return data_len
 
 
 if __name__ == "__main__":
@@ -31,14 +29,12 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     urls = [
-        "https://www.ssec.wisc.edu/~davidh/polar2grid/scmi_grids/scmi_grid_GOES_EAST.png",
-        "https://www.ssec.wisc.edu/~davidh/polar2grid/scmi_grids/scmi_grid_GOES_STORE.png",
-        "https://www.ssec.wisc.edu/~davidh/polar2grid/scmi_grids/scmi_grid_GOES_TEST.png",
-        "https://www.ssec.wisc.edu/~davidh/polar2grid/scmi_grids/scmi_grid_GOES_WEST.png",
-        "https://www.ssec.wisc.edu/~davidh/polar2grid/scmi_grids/scmi_grid_LCC.png",
-        "https://www.ssec.wisc.edu/~davidh/polar2grid/scmi_grids/scmi_grid_Mercator.png",
-        "https://www.ssec.wisc.edu/~davidh/polar2grid/scmi_grids/scmi_grid_Pacific.png",
-        "https://www.ssec.wisc.edu/~davidh/polar2grid/scmi_grids/scmi_grid_Polar.png",
+        "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
+        "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_2mb.mp4",
+        "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_5mb.mp4",
+        "https://sample-videos.com/video321/mp4/480/big_buck_bunny_480p_1mb.mp4",
+        "https://sample-videos.com/video321/mp4/480/big_buck_bunny_480p_2mb.mp4",
+        "https://sample-videos.com/video321/mp4/480/big_buck_bunny_480p_5mb.mp4",
     ]
 
     executor_cls = ThreadPoolExecutor
@@ -46,5 +42,5 @@ if __name__ == "__main__":
         executor_cls = ProcessPoolExecutor
 
     with executor_cls(max_workers=args.num_workers) as executor:
-        result_iter = executor.map(process_binary, urls * 3)
+        result_iter = executor.map(process_binary, urls)
         print(list(result_iter))
