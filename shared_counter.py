@@ -32,7 +32,6 @@ def dict_counting(shared_dict: dict, max_count: int) -> int:
     return 0
 
 
-
 if __name__ == "__main__":
     from argparse import ArgumentParser
 
