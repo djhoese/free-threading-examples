@@ -18,6 +18,17 @@ def do_some_counting(max_count: int) -> int:
     return 0
 
 
+def do_some_counting_const_func(max_count: int) -> int:
+    global COUNT
+    for _ in range(max_count):
+        COUNT += _one()
+    return 0
+
+
+def _one():
+    return 1
+
+
 def locked_counting(lock: threading.Lock | multiprocessing.Lock, max_count: int) -> int:
     global COUNT
     for _ in range(max_count):
@@ -53,6 +64,11 @@ if __name__ == "__main__":
         help="Use a threading or multiprocess lock to control access to the shared count",
     )
     parser.add_argument(
+        "--use-const-func",
+        action="store_true",
+        help="Use a function to load the '1' constant to force race condition even with Python 3.10+ GIL.",
+    )
+    parser.add_argument(
         "--use-dict",
         action="store_true",
         help="Use a dictionary as the shared storage for the counter instead of a global int.",
@@ -62,6 +78,8 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    import sys
+    sys.setswitchinterval(0.000001)
     executor_cls = ThreadPoolExecutor
     if args.use_processes:
         executor_cls = ProcessPoolExecutor
@@ -74,6 +92,8 @@ if __name__ == "__main__":
     if args.use_locking:
         lock = threading.Lock() if not args.use_processes else multiprocessing.Lock()
         thread_func = partial(locked_counting, lock)
+    elif args.use_const_func:
+        thread_func = do_some_counting_const_func
     elif args.use_dict:
         thread_func = partial(dict_counting, shared_dict)
 
@@ -85,3 +105,4 @@ if __name__ == "__main__":
     final_count = COUNT if not args.use_dict else shared_dict["count"]
     status = "SUCCESS" if final_count == exp_count else "FAILURE"
     print(f"{status}: Got {final_count} | Expected {exp_count} | {(stop - start):0.04f} seconds")
+    sys.exit(final_count != exp_count)
